@@ -6,10 +6,9 @@ const store = configureStore({
   reducer: {
     contacts: contatsReduser,
   },
+  devTools: process.env.NODE_ENV === 'development',
   middleware: getDefaultMiddleware => getDefaultMiddleware().concat(logger),
-  devTools:
-    window.__REDUX_DEVTOOLS_EXTENSION__ &&
-    window.__REDUX_DEVTOOLS_EXTENSION__(),
+  /* preloadedState, */
 });
 
 export default store;
