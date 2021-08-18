@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import * as actions from './components/redux/phonebook/phonebook-actions';
+import * as action from './components/redux/phonebook/phonebook-actions';
+import * as options from './components/redux/phonebook/phonebook-options';
 
 import './App.css';
 import ContactForm from './components/ContactForm/ContactForm';
@@ -15,9 +16,13 @@ function App() {
   const filter = useSelector(state => state.contacts.filter);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(options.fetchContacts());
+  }, [dispatch]);
+
   const handleChange = e => {
     if (e.target.name === 'filter') {
-      dispatch(actions.filterContacts(e.target.value));
+      dispatch(action.filterContacts(e.target.value));
       return;
     }
     if (e.target.name === 'name') {
@@ -38,7 +43,8 @@ function App() {
       return;
     }
 
-    dispatch(actions.addContact({ name, number }));
+    dispatch(options.postContacts({ name, number }));
+    dispatch(options.fetchContacts());
 
     setName('');
     setNumber('');
@@ -50,10 +56,11 @@ function App() {
     );
   };
 
-  const deleteItem = e => {
+  const deleteItem = async e => {
     const { id } = e.target;
 
-    dispatch(actions.deleteContact(id));
+    await dispatch(options.deleteContact(id));
+    dispatch(options.fetchContacts());
   };
 
   return (
